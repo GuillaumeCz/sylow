@@ -24,7 +24,7 @@ export function index(req, res, next) {
 
   Promise.all([docTypes, docCount, entityCount, clientCount])
     .then(([contentTypes, documents, entities, clients]) => res.render('index', {
-      active: 'index', contentTypes, documents, entities, clients
+      ctrl: 'index', active: 'index', contentTypes, documents, entities, clients
     }))
     .catch(next);
 }
@@ -33,6 +33,17 @@ export function exportEntity(req, res) {
   return Entity.get(req.params.entityId)
     .then(entity => res.json(entity))
     .catch(err => handleMongooseError(req, res, err, '/entities'));
+}
+
+export function fetchDatas(req, res, next) {
+  const ct = Document.aggregate([{ $sortByCount: '$contentType' }]);
+  const et = Document.aggregate([{ $sortByCount: '$encryption' }]);
+  Promise.all([ct, et])
+    .then(([c, e]) => res.json({
+      contentTypes: c,
+      encryptionTypes: e
+    })) 
+    .catch(e => next(e));
 }
 
 export function showEntity(req, res) {

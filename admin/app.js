@@ -9,6 +9,7 @@ import ClientController from './controllers/client.controller';
 import EntityController from './controllers/entity.controller';
 import LoginController from './controllers/login.controller';
 import ServerController from './controllers/server.controller';
+import IndexController from './controllers/index.controller';
 
 // import images so webpack will include them
 import './assets/images/logo-purple.svg';
@@ -18,6 +19,7 @@ const controllers = {
   entity: EntityController,
   login: LoginController,
   server: ServerController
+  index: IndexController
 };
 
 

@@ -59,7 +59,7 @@ function deauthorizeFile(code) {
 
 
 function createFile(req, res) {
-  const code = authorizeFile(req.user.entity._id);
+  const code = authorizeFile(req.user.entity);
   return res.json({ url: `/api/files/${req.user.entity._id}/${code}` });
 }
 

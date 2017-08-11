@@ -18,7 +18,7 @@ const controllers = {
   client: ClientController,
   entity: EntityController,
   login: LoginController,
-  server: ServerController
+  server: ServerController,
   index: IndexController
 };
 

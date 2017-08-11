@@ -7,19 +7,20 @@ import Controller from './index';
 
 export default class extends Controller {
   createChart(id, obj, title, type, background) {
-    this.createChartContext(id);
+    this.createChartContext(id, title);
     const canvas = document.getElementById(id).getContext('2d');
-    new Chart(canvas, {
-     // list of type of chart: http://www.chartjs.org/docs/latest/charts/
-      type: type,
-      data: {
-        labels: obj.keys,
-	datasets: [{
+    const data = {
+      labels: obj.keys,
+        datasets: [{
           label: title,
           data: obj.values,
-	  backgroundColor: background,
-	}]
-      },
+          backgroundColor: background,
+        }]
+    };
+    const instructions = {
+      // list of type of chart: http://www.chartjs.org/docs/latest/charts/
+      type,
+      data,
       options: {
         hover: {
           mode: null
@@ -31,10 +32,22 @@ export default class extends Controller {
           enabled: false
         }
       }
-    });
+    };
+    if ( type == "bar") {
+      instructions.options = {
+        scales: { 
+          yAxes: [{ 
+            ticks : { 
+              beginAtZero: true 
+            }
+          }]
+        }   
+      }
+    }
+    new Chart(canvas, instructions);
   }
 
-  createChartContext(id) {
+  createChartContext(id, title) {
     this.context.append(`
       <div 
         class="chart-container" 
@@ -43,8 +56,13 @@ export default class extends Controller {
           </canvas> 
       </div>
     `);
+    this.dropdown.append(`
+      <div class="item" data-value=${id}>
+        ${title}
+      </div> 
+    `);
   }
-  
+
   getContentTypes() {
     $.ajax({
       url: '/datas',
@@ -55,35 +73,40 @@ export default class extends Controller {
         values: datas.encryptionTypes.map(e => e.count)
       };
       const ct = {
-        keys: datas.contentTypes.map((dt) => dt._id),
-        values: datas.contentTypes.map((dt) => dt.count)
+        keys: datas.contentTypes.map(dt => dt._id),
+        values: datas.contentTypes.map(dt => dt.count)
       };
-            
-      
       this.createChart(
-        'contentType', 
-        ct, 
-        'Content types', 
-        'pie', 
+        'contentType',
+        ct,
+        'Content types',
+        'pie',
         this.bgc
       );
       this.createChart(
-        'encryptionType', 
-        et, 
-        'Encryption types', 
-        'polarArea', 
+        'encryptionType',
+        et,
+        'Encryption types',
+        'polarArea',
+        this.bgc
+      );
+      this.createChart(
+        'serverToday',
+        { keys: ['ServerToday', 'serverYesterday'], 
+          values: [datas.serverToday.length, 4] },
+        'Server contacted today',
+        'bar',
         this.bgc
       );
     });
   }
 
   init() {
+    this.dropdown = $('.selection.dropdown .menu');
     this.context = $('.chart-space');
     this.bgc = ['rgba(255, 99, 132, 0.2', 'rgba(54, 162, 235, 0.2'];
     this.getContentTypes();
   }
-  
 }
-
 
 

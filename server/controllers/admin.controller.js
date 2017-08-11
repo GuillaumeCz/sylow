@@ -38,11 +38,14 @@ export function exportEntity(req, res) {
 export function fetchDatas(req, res, next) {
   const ct = Document.aggregate([{ $sortByCount: '$contentType' }]);
   const et = Document.aggregate([{ $sortByCount: '$encryption' }]);
-  Promise.all([ct, et])
-    .then(([c, e]) => res.json({
+//  const st = Server.find({ contacted: {$lt: new Date()}});
+  const st = Server.aggregate([{ $count: { contacted: { $lt: new Date()}} }]);
+  Promise.all([ct, et, st])
+    .then(([c, e, s]) => res.json({
       contentTypes: c,
-      encryptionTypes: e
-    })) 
+      encryptionTypes: e,
+      serverToday: s
+    }))
     .catch(e => next(e));
 }
 

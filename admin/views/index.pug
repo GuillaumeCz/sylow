@@ -25,5 +25,9 @@ block dashboard
         tr
           td #{contentType._id}
           td #{contentType.count}
-
+  div(class="ui selection dropdown")
+    input(name="chart-select" type="hidden")
+    i(class="dropdown icon")
+    div(class="default text")= Charts
+    div(class="menu")
   div(class="chart-space")

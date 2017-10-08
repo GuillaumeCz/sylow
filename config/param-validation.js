@@ -139,7 +139,7 @@ export default {
       deviceType: Joi.string().required(),
       redirectUri: Joi.string().required(),
       grantTypes: Joi.string(),
-      scope: Joi.string()
+      scope: Joi.object()
     }
   },
 
@@ -153,7 +153,7 @@ export default {
       deviceType: Joi.string().required(),
       redirectUri: Joi.string().required(),
       grantTypes: Joi.string(),
-      scope: Joi.string()
+      scope: Joi.object()
     },
     params: {
       clientId: Joi.string().required()

@@ -31,7 +31,12 @@ const ClientSchema = new mongoose.Schema({
     required: true
   },
   grantTypes: String,
-  scope: String,
+  scope: {
+    read: [],
+    create: [],
+    update: [],
+    delete: []
+  },
   isTrusted: {
     type: Boolean,
     default: false

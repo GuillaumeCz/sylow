@@ -31,7 +31,12 @@ function create(req, res, next) {
     clientSecret: req.body.clientSecret,
     redirectUri: req.body.redirectUri,
     grantTypes: req.body.grantTypes,
-    scope: req.body.scope
+    scope: req.body.scope ? {
+      read: req.body.scope.read,
+      create: req.body.scope.create,
+      update: req.body.scope.update,
+      delete: req.body.scope.delete
+    } : {}
   });
 
   client.save()
@@ -51,8 +56,14 @@ function update(req, res, next) {
   client.clientSecret = req.body.clientSecret;
   client.redirectUri = req.body.redirectUri;
   client.grantTypes = req.body.grantTypes;
-  client.scope = req.body.scope;
-
+  if (req.body.scope) {
+    client.scope = {
+      read: req.body.scope.read ? req.body.scope.read : [],
+      create: req.body.scope.create ? req.body.scope.create : [],
+      update: req.body.scope.update ? req.body.scope.update : [],
+      delete: req.body.scope.delete ? req.body.scope.delete : []
+    }
+  }
   client.save()
     .then(savedClient => res.json(savedClient))
     .catch(e => next(e));

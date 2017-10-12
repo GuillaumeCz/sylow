@@ -13,7 +13,13 @@ describe('## Client APIs', () => {
     clientName: 'clientNameTest',
     clientSecret: 'clientSecretTest',
     redirectUri: 'http://localhost/cb',
-    deviceType: 'mobile'
+    deviceType: 'mobile',
+    scope: {
+      read: ['doc1'],
+      create: [],
+      update: [],
+      delete: []
+    }
   };
 
   let accessToken;
